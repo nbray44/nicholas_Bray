@@ -1,2 +1,2 @@
 # nicholas_Bray
-Sample
+Sample details of simple intrest  calculator 
