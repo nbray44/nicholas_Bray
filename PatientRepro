@@ -1,24 +1,32 @@
-package com.project.back_end.repo;
+package com.project.back_end.services;
 
 import com.project.back_end.models.Patient;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.project.back_end.repo.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.Optional;
 
-/**
- * Repository interface for Patient entity to provide standard CRUD operations.
- */
-@Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
-    
+@Service
+public class PatientService {
+
+    @Autowired
+    private PatientRepository patientRepository;
+
     /**
-     * Requirement: Custom method to retrieve a patient using their email address.
-     * Spring Data JPA will automatically implement this query based on the method name.
+     * Requirement Fix: Single method that retrieves a patient if EITHER 
+     * email or phone number matches.
      */
-    Optional<Patient> findByEmail(String email);
-    
-    /**
-     * Additional recommendation from feedback: Find by phone number.
-     */
-    Optional<Patient> findByPhoneNumber(String phoneNumber);
+    public Optional<Patient> findPatientByContactInfo(String email, String phoneNumber) {
+        // Calls the new repository method to handle the simultaneous search
+        return patientRepository.findByEmailOrPhoneNumber(email, phoneNumber);
+    }
+
+    // Existing individual search methods
+    public Optional<Patient> findByEmail(String email) {
+        return patientRepository.findByEmail(email);
+    }
+
+    public Optional<Patient> findByPhoneNumber(String phoneNumber) {
+        return patientRepository.findByPhoneNumber(phoneNumber);
+    }
 }
