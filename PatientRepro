@@ -3,11 +3,22 @@ package com.project.back_end.repo;
 import com.project.back_end.models.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 /**
  * Repository interface for Patient entity to provide standard CRUD operations.
  */
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-     
+    
+    /**
+     * Requirement: Custom method to retrieve a patient using their email address.
+     * Spring Data JPA will automatically implement this query based on the method name.
+     */
+    Optional<Patient> findByEmail(String email);
+    
+    /**
+     * Additional recommendation from feedback: Find by phone number.
+     */
+    Optional<Patient> findByPhoneNumber(String phoneNumber);
 }
