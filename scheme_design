@@ -1,0 +1,24 @@
+erDiagram
+    PATIENT ||--o{ APPOINTMENT : books
+    DOCTOR ||--o{ APPOINTMENT : attends
+    
+    PATIENT {
+        int patient_id PK
+        string first_name
+        string last_name
+        string email UK
+    }
+    
+    DOCTOR {
+        int doctor_id PK
+        string name
+        string specialization
+    }
+    
+    APPOINTMENT {
+        int appointment_id PK
+        int patient_id FK
+        int doctor_id FK
+        datetime appointment_time
+        string status
+    }
