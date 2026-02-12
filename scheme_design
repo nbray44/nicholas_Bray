@@ -1,4 +1,4 @@
--- PATIENT Table
+-- 1. PATIENT Table
 CREATE TABLE PATIENT (
     patient_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
@@ -6,29 +6,30 @@ CREATE TABLE PATIENT (
     email VARCHAR(100) UNIQUE NOT NULL
 );
 
--- DOCTOR Table
+-- 2. DOCTOR Table
 CREATE TABLE DOCTOR (
     doctor_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     specialization VARCHAR(100)
 );
 
--- APPOINTMENT Table (Includes Foreign Key Constraints)
+-- 3. APPOINTMENT Table
 CREATE TABLE APPOINTMENT (
     appointment_id INT PRIMARY KEY AUTO_INCREMENT,
     patient_id INT,
     doctor_id INT,
     appointment_time DATETIME NOT NULL,
     status VARCHAR(20),
-    
-    -- Explicit Foreign Key Relationships
-    CONSTRAINT fk_patient
-        FOREIGN KEY (patient_id) 
-        REFERENCES PATIENT(patient_id)
-        ON DELETE CASCADE,
-        
-    CONSTRAINT fk_doctor
-        FOREIGN KEY (doctor_id) 
-        REFERENCES DOCTOR(doctor_id)
-        ON DELETE SET NULL
+    CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES PATIENT(patient_id) ON DELETE CASCADE,
+    CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES DOCTOR(doctor_id) ON DELETE SET NULL
+);
+
+-- 4. PRESCRIPTION Table (The Required Fourth Table)
+CREATE TABLE PRESCRIPTION (
+    prescription_id INT PRIMARY KEY AUTO_INCREMENT,
+    appointment_id INT,
+    medication_name VARCHAR(100) NOT NULL,
+    dosage VARCHAR(50),
+    instructions TEXT,
+    CONSTRAINT fk_appointment FOREIGN KEY (appointment_id) REFERENCES APPOINTMENT(appointment_id) ON DELETE CASCADE
 );
