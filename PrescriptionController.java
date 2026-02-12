@@ -2,13 +2,15 @@ package com.project.back_end.controllers;
 
 import com.project.back_end.models.Prescription;
 import com.project.back_end.services.PrescriptionService;
-import jakarta.validation.Valid; // Added for validation
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus; // Added for response status
-import org.springframework.http.ResponseEntity; // Added for structured response
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/prescriptions")
@@ -17,7 +19,6 @@ public class PrescriptionController {
     @Autowired
     private PrescriptionService prescriptionService;
 
-    // GET endpoint to retrieve all prescriptions
     @GetMapping
     public List<Prescription> getAllPrescriptions() {
         return prescriptionService.getAllPrescriptions();
@@ -25,16 +26,21 @@ public class PrescriptionController {
 
     /**
      * Requirement Fix: 
-     * 1. Added @Valid to validate the incoming Prescription object.
-     * 2. Changed return type to ResponseEntity for structured status codes.
+     * Modified to return a structured response using Map<String, Object> 
+     * to include a success message as requested in the feedback.
      */
     @PostMapping
-    public ResponseEntity<Prescription> createPrescription(@Valid @RequestBody Prescription prescription) {
+    public ResponseEntity<Map<String, Object>> createPrescription(@Valid @RequestBody Prescription prescription) {
         Prescription savedPrescription = prescriptionService.savePrescription(prescription);
-        return new ResponseEntity<>(savedPrescription, HttpStatus.CREATED);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Prescription created successfully");
+        response.put("status", "success");
+        response.put("data", savedPrescription);
+        
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // GET endpoint to retrieve a single prescription by ID
     @GetMapping("/{id}")
     public ResponseEntity<Prescription> getPrescriptionById(@PathVariable String id) {
         return prescriptionService.getPrescriptionById(id)
@@ -42,7 +48,6 @@ public class PrescriptionController {
                 .orElseThrow(() -> new RuntimeException("Prescription not found with id: " + id));
     }
 
-    // DELETE endpoint to remove a prescription
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePrescription(@PathVariable String id) {
         prescriptionService.deletePrescription(id);
