@@ -1,14 +1,44 @@
 1. Doctor
 
     Story: As a Doctor, I want to view a patient's medical history, so that I can provide accurate diagnoses and treatments.
+        Acceptance Criteria:
+            System displays past diagnoses, medications, and allergies.
+            Doctor can filter history by date or record type.
+        Priority: High
+        Story Points: 5
     Story: As a Doctor, I want to manage my daily appointment schedule, so that I can optimize my workflow and reduce patient wait times.
+        Acceptance Criteria:
+            Calendar view updates in real-time as patients book or cancel.
+            Doctor can mark appointments as "complete" or "no-show."
+        Priority: Medium
+        Story Points: 3
 
 2. Patient
 
     Story: As a Patient, I want to book an appointment online, so that I can schedule my visit conveniently without calling the clinic.
+        Acceptance Criteria:
+            Patient can view available time slots for specific doctors.
+            A confirmation email is sent immediately after booking.
+        Priority: High
+        Story Points: 8
     Story: As a Patient, I want to receive automated appointment reminders, so that I can ensure I don't miss my scheduled consultations.
+        Acceptance Criteria:
+            SMS/Email reminders are sent 24 hours prior to the appointment.
+            Reminders include a "cancel/reschedule" link.
+        Priority: Medium
+        Story Points: 3
 
 3. Admin
 
     Story: As an Admin, I want to manage user accounts and permissions, so that I can ensure only authorized personnel access sensitive medical data.
+        Acceptance Criteria:
+            Admin can assign roles (Doctor, Patient, Staff) to new accounts.
+            Admin can deactivate accounts for former employees.
+        Priority: High
+        Story Points: 5
     Story: As an Admin, I want to generate monthly clinic performance reports, so that I can analyze patient volume and improve resource allocation.
+        Acceptance Criteria:
+            System generates a PDF showing total appointments and cancellations per month.
+            Reports show average patient wait times per doctor.
+        Priority: Low
+        Story Points: 5
