@@ -1,25 +1,32 @@
-# Stage 1: Build stage
-# Use Maven to compile and package the application
+# --- Stage 1: Build stage ---
+# Use a Maven image with JDK 17 to compile and package the Java application.
+# The 'AS build' allows us to reference this stage later to extract the built JAR.
 FROM maven:3.8.4-openjdk-17-slim AS build
+
+# Set the working directory within the container for the build process.
 WORKDIR /app
 
-# Copy the pom.xml and source code to the container
+# Copy the Maven project file (pom.xml) and the source code into the build container.
 COPY pom.xml .
 COPY src ./src
 
-# Build the application and skip tests for faster deployment
+# Execute the Maven build to produce a runnable JAR file.
+# The '-DskipTests' flag is used to speed up the build process by bypassing unit tests.
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run stage
-# Use a smaller JRE image for the final execution environment
+# --- Stage 2: Runtime stage ---
+# Use a lightweight OpenJDK runtime image to minimize the final container size and security footprint.
 FROM openjdk:17-jdk-slim
+
+# Set the working directory for the application at runtime.
 WORKDIR /app
 
-# Copy ONLY the resulting JAR from the build stage
+# Copy only the compiled JAR file from the 'build' stage into this final image.
+# This keeps build-only tools like Maven out of the production environment.
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose the application port
+# Inform Docker that the application listens on port 8080 at runtime.
 EXPOSE 8080
 
-# Run the application
+# Specify the command to execute the Spring Boot application when the container starts.
 ENTRYPOINT ["java", "-jar", "app.jar"]
