@@ -1,12 +1,13 @@
-package com.project.back_end.models;
+ package com.project.back_end.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import java.util.List; // Added missing import
 
 @Entity
 @Table(name = "doctors")
-@Data // Automatically generates Getters/Setters if using Lombok
+@Data 
 public class Doctor {
 
     @Id
@@ -27,7 +28,13 @@ public class Doctor {
     @Column(unique = true, nullable = false)
     private String email;
 
-    // A Doctor can have many Appointments
+    // --- ADDED TO MEET CRITERIA ---
+    @ElementCollection
+    @CollectionTable(name = "doctor_available_times", joinColumns = @JoinColumn(name = "doctor_id"))
+    @Column(name = "available_time")
+    private List<String> availableTimes;
+    // ------------------------------
+
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
 }
