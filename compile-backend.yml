@@ -21,5 +21,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Compile and Build with Maven
-      run: mvn -B package --file pom.xml
+    # FIX: Added a step to ensure the Maven Wrapper is executable
+    - name: Permission for Wrapper
+      run: chmod +x ./mvnw
+
+    # FIX: Updated to use the Maven Wrapper (./mvnw) instead of 'mvn'
+    # and ensured the build runs from the correct directory
+    - name: Compile and Build with Maven Wrapper
+      run: ./mvnw -B package
