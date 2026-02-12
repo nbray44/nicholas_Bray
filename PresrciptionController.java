@@ -2,7 +2,10 @@ package com.project.back_end.controllers;
 
 import com.project.back_end.models.Prescription;
 import com.project.back_end.services.PrescriptionService;
+import jakarta.validation.Valid; // Added for validation
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus; // Added for response status
+import org.springframework.http.ResponseEntity; // Added for structured response
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,22 +23,29 @@ public class PrescriptionController {
         return prescriptionService.getAllPrescriptions();
     }
 
-    // POST endpoint to create a new prescription
+    /**
+     * Requirement Fix: 
+     * 1. Added @Valid to validate the incoming Prescription object.
+     * 2. Changed return type to ResponseEntity for structured status codes.
+     */
     @PostMapping
-    public Prescription createPrescription(@RequestBody Prescription prescription) {
-        return prescriptionService.savePrescription(prescription);
+    public ResponseEntity<Prescription> createPrescription(@Valid @RequestBody Prescription prescription) {
+        Prescription savedPrescription = prescriptionService.savePrescription(prescription);
+        return new ResponseEntity<>(savedPrescription, HttpStatus.CREATED);
     }
 
     // GET endpoint to retrieve a single prescription by ID
     @GetMapping("/{id}")
-    public Prescription getPrescriptionById(@PathVariable String id) {
+    public ResponseEntity<Prescription> getPrescriptionById(@PathVariable String id) {
         return prescriptionService.getPrescriptionById(id)
+                .map(prescription -> new ResponseEntity<>(prescription, HttpStatus.OK))
                 .orElseThrow(() -> new RuntimeException("Prescription not found with id: " + id));
     }
 
     // DELETE endpoint to remove a prescription
     @DeleteMapping("/{id}")
-    public void deletePrescription(@PathVariable String id) {
+    public ResponseEntity<Void> deletePrescription(@PathVariable String id) {
         prescriptionService.deletePrescription(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
